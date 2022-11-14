@@ -1,0 +1,6 @@
+/.idea/
+/agent-test/target/
+/java-agent.iml
+/demo-agent/target/
+/agent-test/agent-test.iml
+/demo-agent/demo-agent.iml
