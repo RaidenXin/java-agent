@@ -12,4 +12,8 @@ public class DemoService {
         User user = new User();
         return user;
     }
+
+    public static String get(String key) {
+        return "get";
+    }
 }

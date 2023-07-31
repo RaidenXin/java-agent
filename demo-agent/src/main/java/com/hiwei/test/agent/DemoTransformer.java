@@ -12,7 +12,7 @@ import java.security.ProtectionDomain;
 
 public class DemoTransformer implements ClassFileTransformer {
 
-    private static final String CLASS_NAME = "org.springframework.data.redis.core.DefaultValueOperations";
+    private static final String CLASS_NAME = "com.hiwei.test.DemoService";
 
     @Override
     public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) {
@@ -32,7 +32,7 @@ public class DemoTransformer implements ClassFileTransformer {
                         CodeAttribute codeAttribute = methodInfo.getCodeAttribute();
                         LocalVariableAttribute attribute = (LocalVariableAttribute) codeAttribute.getAttribute(LocalVariableAttribute.tag);
                         System.err.println("----------------------------------");
-                        m.insertAfter("{ com.hiwei.test.agent.utils.PrintUtils.print(" + attribute.variableName(1) + ", $_); }");
+                        m.insertAfter("{ com.hiwei.test.agent.utils.PrintUtils.print(" + attribute.variableName(0) + ", $_); }");
                     }
                 }
                 return ctClass.toBytecode();

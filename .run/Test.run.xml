@@ -2,7 +2,7 @@
   <configuration default="false" name="Test" type="Application" factoryName="Application" nameIsGenerated="true">
     <option name="MAIN_CLASS_NAME" value="com.hiwei.test.Test" />
     <module name="agent-test" />
-    <option name="VM_PARAMETERS" value="-javaagent:C:\Users\Raiden\.m2\repository\org\example\demo-agent\1.0-SNAPSHOT\demo-agent-1.0-SNAPSHOT.jar=C:\Work\mywork\java-agent\agent-test\mock.json" />
+    <option name="VM_PARAMETERS" value="-javaagent:$MAVEN_REPOSITORY$/org/example/demo-agent/1.0-SNAPSHOT/demo-agent-1.0-SNAPSHOT.jar=$PROJECT_DIR$/agent-test/mock.json" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="com.hiwei.test.*" />
