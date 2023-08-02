@@ -10,6 +10,6 @@ public interface AgentInterceptor {
     default void postHandle(Object param) throws Exception {
     }
 
-    default void afterCompletion(Object handler) throws Exception {
+    default void afterCompletion(Object param, Object result) throws Exception {
     }
 }
