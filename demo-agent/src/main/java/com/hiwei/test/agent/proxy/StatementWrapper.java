@@ -37,7 +37,6 @@ public class StatementWrapper {
         if (parameters != null) {
             context.parameters = JsonHelper.stringify(parameters);
         }
-        FileHelper.append(context.getData(), new File("D:\\tmp\\data\\" + context.trace + ".call"));
         CallContext.exitSpan();
     }
  

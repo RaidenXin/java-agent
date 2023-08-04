@@ -1,10 +1,9 @@
 package com.hiwei.test.agent.filter;
  
+import com.hiwei.test.agent.proxy.ProxyConnection;
 import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.CtNewMethod;
-import org.example.filter.FilterChain;
-import org.example.proxy.ProxyConnection;
  
 public class SpringJdbcFilterChain implements FilterChain {
     private static final String[] driverClassNames = {

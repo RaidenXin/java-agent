@@ -1,33 +1,36 @@
 package com.hiwei.test.agent.filter;
  
-import com.codetool.common.AnnotationHelper;
+
 import com.hiwei.test.agent.call.CallContext;
 import com.hiwei.test.agent.call.BaseCall;
 import com.hiwei.test.agent.call.CallSpan;
+import com.hiwei.test.agent.call.CallWeb;
 import com.hiwei.test.agent.template.BaseTemplate;
 import com.hiwei.test.agent.template.TemplateFactory;
 import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.CtNewMethod;
- 
+
+import java.util.HashSet;
+import java.util.Set;
+
 public class SpringControllerFilterChain extends AbstractFilterChain {
-    public static SpringControllerFilterChain INSTANCE = new SpringControllerFilterChain();
     
     // 如果类上包含这两个注解中的任意一个则进行插桩
-    private static final String[] controllerAnnotations = {
-            "@org.springframework.web.bind.annotation.RestController",
-            "@org.springframework.stereotype.Controller"
-    };
+    private static final Set<String> CONTROLLER_ANNOTATIONS = new HashSet<String>() {{
+        add("@org.springframework.web.bind.annotation.RestController");
+        add("@org.springframework.stereotype.Controller");
+    }};
  
     // 如果方法上包含 6 个注解中的任意一个则进行插桩
-    private static final String[] mappingAnnotations = {
-            "@org.springframework.web.bind.annotation.RequestMapping",
-            "@org.springframework.web.bind.annotation.GetMapping",
-            "@org.springframework.web.bind.annotation.PostMapping",
-            "@org.springframework.web.bind.annotation.PutMapping",
-            "@org.springframework.web.bind.annotation.DeleteMapping",
-            "@org.springframework.web.bind.annotation.PatchMapping"
-    };
+    private static final Set<String> MAPPING_ANNOTATIONS = new HashSet<String>() {{
+        add("@org.springframework.web.bind.annotation.RequestMapping");
+        add("@org.springframework.web.bind.annotation.GetMapping");
+        add("@org.springframework.web.bind.annotation.PostMapping");
+        add("@org.springframework.web.bind.annotation.PutMapping");
+        add("@org.springframework.web.bind.annotation.DeleteMapping");
+        add("@org.springframework.web.bind.annotation.PatchMapping");
+    }};
  
  
     @Override
@@ -48,11 +51,8 @@ public class SpringControllerFilterChain extends AbstractFilterChain {
         // 不处理注解
         if (!ctClass.isAnnotation()) {
             try {
-                for (String controllerAnnotation : controllerAnnotations) {
-                    String annotationValue = AnnotationHelper.getAnnotationValue(ctClass.getAnnotations(), controllerAnnotation);
-                    if (annotationValue != null) {
-                        return true;
-                    }
+                for (Object annotation : ctClass.getAnnotations()) {
+
                 }
             } catch (ClassNotFoundException e) {
                 // System.err.println(e.getMessage());
@@ -74,7 +74,7 @@ public class SpringControllerFilterChain extends AbstractFilterChain {
             boolean status = false;
  
             // 必须包含指定的注解
-            for (String annotation : mappingAnnotations) {
+            for (String annotation : MAPPING_ANNOTATIONS) {
                 // 反复与运算, 只要包含一个 Mapping 注解. 那么这个方法就是我们需要处理的方法
                 status = status || AnnotationHelper.getAnnotationValue(method.getAnnotations(), annotation) != null;
             }
@@ -86,7 +86,7 @@ public class SpringControllerFilterChain extends AbstractFilterChain {
  
             String methodName = method.getName();
  
-            BaseCall context = new BaseCall();
+            BaseCall context = new CallWeb();
             context.type = "CONTROLLER";
             context.className = className;
             context.methodName = methodName;

@@ -120,8 +120,8 @@ public class HttpServletFilterChain extends AbstractFilterChain {
     public byte[] processingAgentClass(ClassLoader loader, CtClass ctClass, String className) throws Exception {
         String methodName = "service";
         CtMethod service = ctClass.getMethod(methodName, "(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V");
- 
-        BaseCall context = new BaseCall();
+
+        CallServlet context = new CallServlet();
         context.type = "SERVLET";
         context.className = servletClassName;
         context.context.put("CallType", "org.example.call.pojo.CallServlet");

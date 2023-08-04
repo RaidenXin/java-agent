@@ -1,7 +1,5 @@
 package com.hiwei.test.agent.call;
  
-import com.codetool.common.SnowFlakeHelper;
- 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;

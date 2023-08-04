@@ -77,7 +77,7 @@ public abstract class AbstractFilterChain implements FilterChain {
                 }
             }
             sb.append("}");
-            return "new String[] " + sb.toString();
+            return "new String[] " + sb;
         }
         return null;
     }
@@ -93,11 +93,9 @@ public abstract class AbstractFilterChain implements FilterChain {
         if (!java.lang.reflect.Modifier.isPublic(modifiers)) {
             return false;
         }
- 
         if (java.lang.reflect.Modifier.isStatic(modifiers)) {
             return false;
         }
- 
         return !java.lang.reflect.Modifier.isNative(modifiers);
     }
  
