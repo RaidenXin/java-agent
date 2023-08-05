@@ -1,5 +1,8 @@
 package com.hiwei.test.agent.call;
 
+import com.hiwei.test.agent.helper.SnowFlakeHelper;
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.Objects;
 
 /**
@@ -7,29 +10,29 @@ import java.util.Objects;
  *
  * @author tameti
  */
-public class CallContext {
-    private static ThreadLocal<CallSpan> context = new ThreadLocal<>();
-    private static ThreadLocal<String> traceContext = new ThreadLocal<>();
+public final class CallContext {
+    private static final ThreadLocal<CallSpan> CONTEXT = new ThreadLocal<>();
+    private static final ThreadLocal<String> TRACE_CONTEXT = new ThreadLocal<>();
  
     public static CallSpan.Span createEntrySpan(String span) {
-        CallSpan callSpan = context.get();
+        CallSpan callSpan = CONTEXT.get();
         if (callSpan == null) {
             callSpan = new CallSpan(span);
-            context.set(callSpan);
+            CONTEXT.set(callSpan);
             return callSpan.getCurrentSpan();
         }
         return callSpan.createEntrySpan();
     }
  
     public static void exitSpan() {
-        CallSpan callSpan = context.get();
+        CallSpan callSpan = CONTEXT.get();
         if (callSpan != null) {
             callSpan.exitSpan();
         }
     }
  
     public static CallSpan.Span getCurrentSpan() {
-        CallSpan callSpan = context.get();
+        CallSpan callSpan = CONTEXT.get();
         if (callSpan == null) {
             return null;
         }
@@ -38,17 +41,12 @@ public class CallContext {
  
     public static void setTrace(String trace) {
         if (Objects.isNull(trace)) {
-            trace = SnowFlakeHelper.getInstance(100).nextId() + "";
+            trace = SnowFlakeHelper.getInstance().nextId() + StringUtils.EMPTY;
         }
-        traceContext.set(trace);
+        TRACE_CONTEXT.set(trace);
     }
  
     public static String getTrace() {
-        return traceContext.get();
-    }
- 
-    public static void main(String[] args) {
-        CallContext.createEntrySpan(null);
-        CallContext.exitSpan();
+        return TRACE_CONTEXT.get();
     }
 }

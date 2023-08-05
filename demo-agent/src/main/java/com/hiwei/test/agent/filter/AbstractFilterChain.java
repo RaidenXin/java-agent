@@ -2,9 +2,12 @@ package com.hiwei.test.agent.filter;
 
 import com.hiwei.test.agent.call.CallContext;
 import com.hiwei.test.agent.call.BaseCall;
+import com.hiwei.test.agent.common.Constant;
+import com.hiwei.test.agent.helper.MethodHelper;
 import javassist.CtMethod;
  
 import java.io.File;
+import java.util.List;
 
 /**
  * 这个类对拦截的方法的具体执行逻辑做了一系列的抽象.
@@ -57,8 +60,6 @@ public abstract class AbstractFilterChain implements FilterChain {
      */
     public void finale(BaseCall context) {
         CallContext.exitSpan();
-        String data = context.getData();
-        FileHelper.append(data, new File("D:\\tmp\\data\\" + context.trace + ".call"));
     }
  
     /**
@@ -67,17 +68,15 @@ public abstract class AbstractFilterChain implements FilterChain {
      * @param method 字节码方法
      */
     protected String renderParamNames(CtMethod method) {
-        String[] variables = MethodHelper.getVariables(method);
-        if (variables.length > 0) {
-            StringBuilder sb = new StringBuilder("{");
-            for (int i = 0; i < variables.length; i++) {
-                sb.append("\"").append(variables[i]).append("\"");
-                if (i != variables.length - 1) {
-                    sb.append(",");
-                }
+        List<String> variables = MethodHelper.getVariables(method);
+        if (variables.size() > 0) {
+            StringBuilder sb = new StringBuilder("new String[] {");
+            for (String variable : variables) {
+                sb.append("\"").append(variable).append("\"");
+                sb.append(",");
             }
-            sb.append("}");
-            return "new String[] " + sb;
+            sb.setCharAt(sb.length() - Constant.ONE, '}');
+            return  sb.toString();
         }
         return null;
     }

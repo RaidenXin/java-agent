@@ -10,16 +10,26 @@ import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.CtNewMethod;
 
+import java.lang.annotation.Annotation;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Stream;
+
 public class SpringServiceFilterChain extends AbstractFilterChain {
 
-    private static final String serviceAnnotation = "@org.springframework.stereotype.Service";
+    private static final Set<String> SERVICE_ANNOTATION = new HashSet<String>(){{
+        add("org.springframework.stereotype.Service");
+        add("org.springframework.stereotype.Component");
+    }};
 
     @Override
     public boolean isTargetClass(String className, CtClass ctClass) {
         try {
-            Object[] annotations = ctClass.getAnnotations();
-            String annotationValue = AnnotationHelper.getAnnotationValue(annotations, serviceAnnotation);
-            return annotationValue != null;
+            final Object[] annotations = ctClass.getAnnotations();
+            return Stream.of(annotations)
+                    .filter(a -> a instanceof Annotation)
+                    .map(a -> ((Annotation) a).annotationType().getName())
+                    .anyMatch(SERVICE_ANNOTATION::contains);
         } catch (ClassNotFoundException e) {
             return false;
         }

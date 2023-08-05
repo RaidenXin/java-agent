@@ -1,13 +1,11 @@
 package com.hiwei.test.agent.proxy;
- 
-import com.codetool.common.FileHelper;
-import com.codetool.common.JsonHelper;
-import com.codetool.common.SnowFlakeHelper;
+
+import com.alibaba.fastjson.JSON;
 import com.hiwei.test.agent.call.CallContext;
 import com.hiwei.test.agent.call.CallJdbc;
 import com.hiwei.test.agent.call.CallSpan;
+import com.hiwei.test.agent.helper.SnowFlakeHelper;
 
-import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -24,7 +22,7 @@ public class StatementWrapper {
         System.err.println("new Statement ...");
         CallSpan.Span span = CallContext.createEntrySpan(null);
         this.context = onStartUp(context);
-        this.context.id = SnowFlakeHelper.getInstance(1000).nextId();
+        this.context.id = SnowFlakeHelper.getInstance().nextId();
         this.context.thread = Thread.currentThread().getName();
         this.context.startTime = System.currentTimeMillis();
         this.context.trace = CallContext.getTrace();
@@ -35,7 +33,7 @@ public class StatementWrapper {
         // 1. 获取 sql 携带的参数
         Object parameters = context.context.get("parameters");
         if (parameters != null) {
-            context.parameters = JsonHelper.stringify(parameters);
+            context.parameters = JSON.toJSONString(parameters);
         }
         CallContext.exitSpan();
     }

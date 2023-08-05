@@ -1,6 +1,6 @@
 package com.hiwei.test.agent.filter;
- 
-import com.codetool.common.JsonHelper;
+
+import com.alibaba.fastjson.JSON;
 import com.hiwei.test.agent.call.CallContext;
 import com.hiwei.test.agent.call.BaseCall;
 import com.hiwei.test.agent.call.CallServlet;
@@ -24,11 +24,6 @@ import java.util.Map;
  * @author tameti
  */
 public class HttpServletFilterChain extends AbstractFilterChain {
- 
-    /**
-     * 暴露实例出去
-     */
-    public static HttpServletFilterChain INSTANCE = new HttpServletFilterChain();
  
     /**
      * web 入口
@@ -93,9 +88,9 @@ public class HttpServletFilterChain extends AbstractFilterChain {
         servlet.address = address;
         servlet.url = url;
         servlet.method = method;
-        servlet.params = JsonHelper.stringify(request.getParameterMap());
-        servlet.header = JsonHelper.stringify(header);
-        servlet.cookies = JsonHelper.stringify(request.getCookies());
+        servlet.params = JSON.toJSONString(request.getParameterMap());
+        servlet.header = JSON.toJSONString(header);
+        servlet.cookies = JSON.toJSONString(request.getCookies());
         servlet.thread = Thread.currentThread().getName();
     }
  

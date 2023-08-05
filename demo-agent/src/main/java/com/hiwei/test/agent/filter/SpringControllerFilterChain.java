@@ -11,25 +11,27 @@ import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.CtNewMethod;
 
+import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Stream;
 
 public class SpringControllerFilterChain extends AbstractFilterChain {
     
     // 如果类上包含这两个注解中的任意一个则进行插桩
     private static final Set<String> CONTROLLER_ANNOTATIONS = new HashSet<String>() {{
-        add("@org.springframework.web.bind.annotation.RestController");
-        add("@org.springframework.stereotype.Controller");
+        add("org.springframework.web.bind.annotation.RestController");
+        add("org.springframework.stereotype.Controller");
     }};
  
     // 如果方法上包含 6 个注解中的任意一个则进行插桩
     private static final Set<String> MAPPING_ANNOTATIONS = new HashSet<String>() {{
-        add("@org.springframework.web.bind.annotation.RequestMapping");
-        add("@org.springframework.web.bind.annotation.GetMapping");
-        add("@org.springframework.web.bind.annotation.PostMapping");
-        add("@org.springframework.web.bind.annotation.PutMapping");
-        add("@org.springframework.web.bind.annotation.DeleteMapping");
-        add("@org.springframework.web.bind.annotation.PatchMapping");
+        add("org.springframework.web.bind.annotation.RequestMapping");
+        add("org.springframework.web.bind.annotation.GetMapping");
+        add("org.springframework.web.bind.annotation.PostMapping");
+        add("org.springframework.web.bind.annotation.PutMapping");
+        add("org.springframework.web.bind.annotation.DeleteMapping");
+        add("org.springframework.web.bind.annotation.PatchMapping");
     }};
  
  
@@ -51,9 +53,9 @@ public class SpringControllerFilterChain extends AbstractFilterChain {
         // 不处理注解
         if (!ctClass.isAnnotation()) {
             try {
-                for (Object annotation : ctClass.getAnnotations()) {
-
-                }
+                return Stream.of(ctClass.getAnnotations())
+                        .filter(a -> a instanceof Annotation)
+                        .anyMatch(a -> CONTROLLER_ANNOTATIONS.contains(((Annotation) a).annotationType().getName()));
             } catch (ClassNotFoundException e) {
                 // System.err.println(e.getMessage());
             }
@@ -70,14 +72,11 @@ public class SpringControllerFilterChain extends AbstractFilterChain {
             if (!processed(method)) {
                 continue;
             }
- 
-            boolean status = false;
- 
-            // 必须包含指定的注解
-            for (String annotation : MAPPING_ANNOTATIONS) {
-                // 反复与运算, 只要包含一个 Mapping 注解. 那么这个方法就是我们需要处理的方法
-                status = status || AnnotationHelper.getAnnotationValue(method.getAnnotations(), annotation) != null;
-            }
+
+            // 必须包含指定的注解 只要包含一个 Mapping 注解. 那么这个方法就是我们需要处理的方法
+            boolean status = Stream.of(ctClass.getAnnotations())
+                    .filter(a -> a instanceof Annotation)
+                    .anyMatch(a -> MAPPING_ANNOTATIONS.contains(((Annotation) a).annotationType().getName()));;
  
             // 如果不包含指定的注解, 那么就不处理这个方法
             if (!status) {

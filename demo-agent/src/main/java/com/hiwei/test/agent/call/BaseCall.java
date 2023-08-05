@@ -1,12 +1,14 @@
 package com.hiwei.test.agent.call;
  
+import com.hiwei.test.agent.helper.SnowFlakeHelper;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
  
 public abstract class BaseCall implements Serializable {
     // 主键 ID
-    public Long id = SnowFlakeHelper.getInstance(1000).nextId();
+    public Long id = SnowFlakeHelper.getInstance().nextId();
  
     // 调用链的类型, SERVLET | WEB | SERVICE | JDBC
     public String type;
