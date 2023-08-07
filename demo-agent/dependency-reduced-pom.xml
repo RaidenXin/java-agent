@@ -53,6 +53,24 @@
         </exclusion>
       </exclusions>
     </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.4</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>4.0.1</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>fastjson</artifactId>
+      <version>1.2.83</version>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
   <properties>
     <can.redefine.classes>true</can.redefine.classes>
@@ -60,6 +78,6 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.target>1.8</maven.compiler.target>
     <can.retransform.classes>true</can.retransform.classes>
-    <premain.class>com.hiwei.test.agent.DemoAgent</premain.class>
+    <premain.class>com.hiwei.test.agent.AgentApplication</premain.class>
   </properties>
 </project>

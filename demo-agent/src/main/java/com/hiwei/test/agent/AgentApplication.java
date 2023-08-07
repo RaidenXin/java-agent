@@ -46,13 +46,12 @@ public class AgentApplication implements ClassFileTransformer {
                 return NO_TRANSFORM;
             }
             String finalClassName = StringUtils.replace(className, "/", ".");
-            ClassPool pool = new ClassPool(true);
+            ClassPool pool = ClassPool.getDefault();
             if (loader != null) {
                 pool.insertClassPath(new LoaderClassPath(loader));
             } else {
                 pool.insertClassPath(new LoaderClassPath(ClassLoader.getSystemClassLoader()));
             }
- 
             for (FilterChain chain : chains) {
                 CtClass sourceClass = pool.getCtClass(finalClassName);
                 if (chain.isTargetClass(finalClassName, sourceClass)) {
