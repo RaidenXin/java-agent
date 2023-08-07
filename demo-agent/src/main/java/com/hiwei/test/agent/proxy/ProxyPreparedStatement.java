@@ -2,7 +2,10 @@ package com.hiwei.test.agent.proxy;
  
 
  
+import com.hiwei.test.agent.AgentApplication;
 import com.hiwei.test.agent.call.CallJdbc;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.io.InputStream;
 import java.io.Reader;
@@ -13,6 +16,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
  
 public class ProxyPreparedStatement extends ProxyStatement implements PreparedStatement {
+
+    private static final Logger LOGGER = LogManager.getLogger(AgentApplication.class);
     private PreparedStatement preparedStatement;
     private ArrayList<Object> parameters;
  
@@ -26,7 +31,7 @@ public class ProxyPreparedStatement extends ProxyStatement implements PreparedSt
             }
             context.context.put("parameters", parameters);
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
         this.preparedStatement = preparedStatement;
     }

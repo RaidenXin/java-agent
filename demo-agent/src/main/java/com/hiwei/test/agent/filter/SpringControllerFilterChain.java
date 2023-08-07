@@ -1,6 +1,7 @@
 package com.hiwei.test.agent.filter;
  
 
+import com.hiwei.test.agent.AgentApplication;
 import com.hiwei.test.agent.call.CallContext;
 import com.hiwei.test.agent.call.BaseCall;
 import com.hiwei.test.agent.call.CallSpan;
@@ -10,6 +11,8 @@ import com.hiwei.test.agent.template.TemplateFactory;
 import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.CtNewMethod;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.lang.annotation.Annotation;
 import java.util.HashSet;
@@ -33,7 +36,9 @@ public class SpringControllerFilterChain extends AbstractFilterChain {
         add("org.springframework.web.bind.annotation.DeleteMapping");
         add("org.springframework.web.bind.annotation.PatchMapping");
     }};
- 
+
+    private static final Logger LOGGER = LogManager.getLogger(AgentApplication.class);
+
  
     @Override
     public void before(BaseCall context) {
@@ -57,7 +62,7 @@ public class SpringControllerFilterChain extends AbstractFilterChain {
                         .filter(a -> a instanceof Annotation)
                         .anyMatch(a -> CONTROLLER_ANNOTATIONS.contains(((Annotation) a).annotationType().getName()));
             } catch (ClassNotFoundException e) {
-                // System.err.println(e.getMessage());
+                LOGGER.error(e.getMessage(), e);
             }
         }
         return false;

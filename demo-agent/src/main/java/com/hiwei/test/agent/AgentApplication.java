@@ -8,15 +8,21 @@ import com.hiwei.test.agent.filter.SpringServiceFilterChain;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.LoaderClassPath;
- 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.lang.instrument.Instrumentation;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.List;
- 
+import java.util.Objects;
+
 public class AgentApplication implements ClassFileTransformer {
+
+    private static final Logger LOGGER = LogManager.getLogger(AgentApplication.class);
     private final List<FilterChain> chains = new ArrayList<>();
     private static final byte[] NO_TRANSFORM = null;
  
@@ -36,11 +42,10 @@ public class AgentApplication implements ClassFileTransformer {
     @Override
     public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
         try {
-            if (className == null) {
+            if (Objects.isNull(className)) {
                 return NO_TRANSFORM;
             }
-            String finalClassName = className.replace("/", ".");
- 
+            String finalClassName = StringUtils.replace(className, "/", ".");
             ClassPool pool = new ClassPool(true);
             if (loader != null) {
                 pool.insertClassPath(new LoaderClassPath(loader));
@@ -51,17 +56,17 @@ public class AgentApplication implements ClassFileTransformer {
             for (FilterChain chain : chains) {
                 CtClass sourceClass = pool.getCtClass(finalClassName);
                 if (chain.isTargetClass(finalClassName, sourceClass)) {
-                    System.err.println("尝试对类: " + className + " 进行增强");
+                    LOGGER.info("尝试对类: " + className + " 进行增强");
                     try {
                         return chain.processingAgentClass(loader, sourceClass, finalClassName);
                     } catch (Exception e) {
-                        System.out.println("无法对类 " + className + " 进行增强, 具体的错误原因是: " + e.toString());
+                        LOGGER.error("无法对类 " + className + " 进行增强, 具体的错误原因是: " + e.getMessage(), e);
                     }
                 }
             }
  
         } catch (Exception e) {
-            // TODO ...
+            LOGGER.error(e.getMessage(), e);
         }
  
         return NO_TRANSFORM;

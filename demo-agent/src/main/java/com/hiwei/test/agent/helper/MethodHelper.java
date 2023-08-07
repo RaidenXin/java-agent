@@ -6,6 +6,8 @@ import javassist.NotFoundException;
 import javassist.bytecode.CodeAttribute;
 import javassist.bytecode.LocalVariableAttribute;
 import javassist.bytecode.MethodInfo;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +20,8 @@ import java.util.Objects;
  * @Version 1.0
  */
 public final class MethodHelper {
+
+    private static final Logger LOGGER = LogManager.getLogger(MethodHelper.class);
 
     public static List<String> getVariables(CtMethod ctMethod) {
         if (Objects.isNull(ctMethod)) {
@@ -32,8 +36,8 @@ public final class MethodHelper {
                 return new ArrayList<>();
             }
             int parametersCount = ctMethod.getParameterTypes().length;
-            //获取方法本地变量信息，包括方法声明和方法体内的变量
-            //需注意，若方法为非静态方法，则第一个变量名为this
+            // 获取方法本地变量信息，包括方法声明和方法体内的变量
+            // 需注意，若方法为非静态方法，则第一个变量名为this
             LocalVariableAttribute attr = (LocalVariableAttribute) codeAttribute.getAttribute(LocalVariableAttribute.tag);
             int pos = Modifier.isStatic(ctMethod.getModifiers()) ? 0 : 1;
             List<String> parameterNames = new ArrayList<>();
@@ -42,6 +46,7 @@ public final class MethodHelper {
                 parameterNames.add(paramName);
             }
         } catch (NotFoundException e) {
+            LOGGER.info(e.getMessage(), e);
         }
         return new ArrayList<>();
     }

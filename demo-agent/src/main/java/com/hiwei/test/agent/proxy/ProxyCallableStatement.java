@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
  
 public class ProxyCallableStatement extends ProxyPreparedStatement implements CallableStatement {
+
     private CallableStatement callableStatement;
     private Map<String, Object> parameterMap = new HashMap<>();
  

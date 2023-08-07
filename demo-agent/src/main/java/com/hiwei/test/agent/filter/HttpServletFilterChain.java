@@ -5,11 +5,14 @@ import com.hiwei.test.agent.call.CallContext;
 import com.hiwei.test.agent.call.BaseCall;
 import com.hiwei.test.agent.call.CallServlet;
 import com.hiwei.test.agent.call.CallSpan;
+import com.hiwei.test.agent.helper.MethodHelper;
 import com.hiwei.test.agent.template.BaseTemplate;
 import com.hiwei.test.agent.template.TemplateFactory;
 import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.CtNewMethod;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,7 +27,9 @@ import java.util.Map;
  * @author tameti
  */
 public class HttpServletFilterChain extends AbstractFilterChain {
- 
+
+    private static final Logger LOGGER = LogManager.getLogger(HttpServletFilterChain.class);
+
     /**
      * web 入口
      */
@@ -129,7 +134,7 @@ public class HttpServletFilterChain extends AbstractFilterChain {
         BaseTemplate template = TemplateFactory.getTemplate(service.getReturnType() != CtClass.voidType);
         template.context = context;
         String templateValue = template.render();
-        System.out.println(templateValue);
+        LOGGER.info(templateValue);
         service.setBody(templateValue);
         return ctClass.toBytecode();
     }

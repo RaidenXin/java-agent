@@ -5,12 +5,17 @@ import com.hiwei.test.agent.call.CallContext;
 import com.hiwei.test.agent.call.CallJdbc;
 import com.hiwei.test.agent.call.CallSpan;
 import com.hiwei.test.agent.helper.SnowFlakeHelper;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
  
 public class StatementWrapper {
+
+    private static final Logger LOGGER = LogManager.getLogger(StatementWrapper.class);
+
     protected CallJdbc context;
     private static final String QUERY = "QUERY";
     private static final String EXECUTE = "EXECUTE";
@@ -19,7 +24,7 @@ public class StatementWrapper {
     private static final String BATCH = "BATCH";
  
     StatementWrapper(CallJdbc context) {
-        System.err.println("new Statement ...");
+        LOGGER.info("new Statement ...");
         CallSpan.Span span = CallContext.createEntrySpan(null);
         this.context = onStartUp(context);
         this.context.id = SnowFlakeHelper.getInstance().nextId();

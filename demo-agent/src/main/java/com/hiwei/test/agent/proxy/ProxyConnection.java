@@ -1,9 +1,11 @@
 package com.hiwei.test.agent.proxy;
 
- 
+
 import com.hiwei.test.agent.call.CallContext;
 import com.hiwei.test.agent.call.CallJdbc;
 import com.hiwei.test.agent.call.CallSpan;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.sql.*;
 import java.util.Map;
@@ -11,6 +13,8 @@ import java.util.Properties;
 import java.util.concurrent.Executor;
  
 public class ProxyConnection implements Connection {
+
+    private static final Logger LOGGER = LogManager.getLogger(ProxyConnection.class);
     private Connection connection;
     private CallJdbc context = new CallJdbc();
  
@@ -18,9 +22,9 @@ public class ProxyConnection implements Connection {
     private static final String PREPARED_STATEMENT = "PREPARED_STATEMENT";
     private static final String CALLABLE_STATEMENT = "CALLABLE_STATEMENT";
     private static final String NATIVE = "NATIVE";
- 
+
     public ProxyConnection(Connection connection) {
-        System.err.println(Thread.currentThread().getName() + ": new Connection ...");
+        LOGGER.info(Thread.currentThread().getName() + ": new Connection ...");
         try {
             context.type = "JDBC";
             DatabaseMetaData metaData = connection.getMetaData();
@@ -29,10 +33,8 @@ public class ProxyConnection implements Connection {
             context.databaseType = metaData.getDatabaseProductName();
             this.connection = connection;
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
- 
- 
     }
  
     // 处理原生 sql 的采集信息
@@ -94,7 +96,7 @@ public class ProxyConnection implements Connection {
  
     @Override
     public void rollback() throws SQLException {
-        System.err.println("close Connection ...");
+        LOGGER.info("close Connection ...");
         connection.rollback();
     }
  
