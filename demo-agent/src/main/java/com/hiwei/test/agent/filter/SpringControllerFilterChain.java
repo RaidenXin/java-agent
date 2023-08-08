@@ -106,7 +106,9 @@ public class SpringControllerFilterChain extends AbstractFilterChain {
             ctClass.addMethod(CtNewMethod.copy(method, methodName + "$agent", ctClass, null));
             BaseTemplate baseTemplate = TemplateFactory.getTemplate(method.getReturnType() != CtClass.voidType);
             baseTemplate.context = context;
-            method.setBody(baseTemplate.render());
+            final String templateValue = baseTemplate.render();
+            LOGGER.info(templateValue);
+            method.setBody(templateValue);
         }
  
         return ctClass.toBytecode();

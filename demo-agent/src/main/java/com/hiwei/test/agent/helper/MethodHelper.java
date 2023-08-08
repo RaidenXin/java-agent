@@ -39,6 +39,9 @@ public final class MethodHelper {
             // 获取方法本地变量信息，包括方法声明和方法体内的变量
             // 需注意，若方法为非静态方法，则第一个变量名为this
             LocalVariableAttribute attr = (LocalVariableAttribute) codeAttribute.getAttribute(LocalVariableAttribute.tag);
+            if (Objects.isNull(attr)) {
+                return new ArrayList<>();
+            }
             int pos = Modifier.isStatic(ctMethod.getModifiers()) ? 0 : 1;
             List<String> parameterNames = new ArrayList<>();
             for (int i = 0; i < parametersCount; i++) {

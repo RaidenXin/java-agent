@@ -30,7 +30,7 @@ public class BaseTemplate {
         String callType = context.context.get("CallType").toString();
  
         sb.append("{").append('\n');
-        sb.append("    Object result = null;").append('\n');
+        sb.append("    java.lang.Object result = null;").append('\n');
         sb.append("    com.hiwei.test.agent.call.BaseCall context = new ").append(callType).append("();\n");        
         sb.append("    context.type = \"").append(context.type).append("\";\n");
         sb.append("    context.startTime =  System.currentTimeMillis();\n");

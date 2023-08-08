@@ -9,6 +9,8 @@ import com.hiwei.test.agent.template.TemplateFactory;
 import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.CtNewMethod;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.lang.annotation.Annotation;
 import java.util.HashSet;
@@ -17,6 +19,7 @@ import java.util.stream.Stream;
 
 public class SpringServiceFilterChain extends AbstractFilterChain {
 
+    private static final Logger LOGGER = LogManager.getLogger(SpringServiceFilterChain.class);
     /**
      * 实例
      */
@@ -74,7 +77,9 @@ public class SpringServiceFilterChain extends AbstractFilterChain {
             ctClass.addMethod(CtNewMethod.copy(method, methodName + "$agent", ctClass, null));
             BaseTemplate baseTemplate = TemplateFactory.getTemplate(method.getReturnType() != CtClass.voidType);
             baseTemplate.context = context;
-            method.setBody(baseTemplate.render());
+            final String templateValue = baseTemplate.render();
+            LOGGER.info(templateValue);
+            method.setBody(templateValue);
         }
         return ctClass.toBytecode();
     }
