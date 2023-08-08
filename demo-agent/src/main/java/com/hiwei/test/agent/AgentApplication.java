@@ -8,12 +8,12 @@ import com.hiwei.test.agent.filter.SpringServiceFilterChain;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.LoaderClassPath;
+import javassist.NotFoundException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import java.lang.instrument.ClassFileTransformer;
-import java.lang.instrument.IllegalClassFormatException;
 import java.lang.instrument.Instrumentation;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
@@ -23,37 +23,58 @@ import java.util.Objects;
 public class AgentApplication implements ClassFileTransformer {
 
     private static final Logger LOGGER = LogManager.getLogger(AgentApplication.class);
-    private final List<FilterChain> chains = new ArrayList<>();
-    private static final byte[] NO_TRANSFORM = null;
+
+    private static final List<String> IGNORE_CLASS_NAME_STARTS_WITH = new ArrayList<String>() {{
+        add("net.bytebuddy.");
+        add("org.slf4j.");
+        add("org.groovy.");
+        add("sun.reflect");
+    }};
+
+    private static final List<String> IGNORE_CLASS_NAME_CONTAINS = new ArrayList<String>() {{
+        add("javassist");
+        add(".asm.");
+        add(".reflectasm.");
+    }};
+
+    // kotlin.Metadata
+    private static final List<String> IGNORE_CLASS_NAME = new ArrayList<String>() {{
+        add("kotlin.Metadata");
+    }};
+
+    private final List<FilterChain> chains;
  
     private AgentApplication() {
+        chains = new ArrayList<>(4);
         chains.add(new HttpServletFilterChain());
         chains.add(new SpringControllerFilterChain());
         chains.add(new SpringServiceFilterChain());
         chains.add(new SpringJdbcFilterChain());
     }
- 
- 
+
     public static void premain(String args, Instrumentation instrumentation) {
         instrumentation.addTransformer(new AgentApplication());
     }
  
  
     @Override
-    public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
+    public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) {
+        if (Objects.isNull(className)) {
+            return classfileBuffer;
+        }
+        String finalClassName = StringUtils.replace(className, "/", ".");
+        if (ignore(finalClassName)) {
+            return classfileBuffer;
+        }
         try {
-            if (Objects.isNull(className)) {
-                return NO_TRANSFORM;
-            }
-            String finalClassName = StringUtils.replace(className, "/", ".");
             ClassPool pool = ClassPool.getDefault();
             if (loader != null) {
                 pool.insertClassPath(new LoaderClassPath(loader));
             } else {
                 pool.insertClassPath(new LoaderClassPath(ClassLoader.getSystemClassLoader()));
             }
+            CtClass sourceClass = pool.getCtClass(finalClassName);
             for (FilterChain chain : chains) {
-                CtClass sourceClass = pool.getCtClass(finalClassName);
                 if (chain.isTargetClass(finalClassName, sourceClass)) {
                     LOGGER.info("尝试对类: " + className + " 进行增强");
                     try {
@@ -63,13 +84,23 @@ public class AgentApplication implements ClassFileTransformer {
                     }
                 }
             }
- 
+        } catch (NotFoundException e) {
+            LOGGER.error("未找到 className:" + finalClassName);
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         }
- 
-        return NO_TRANSFORM;
+        return classfileBuffer;
     }
- 
+    
+    
+    private boolean ignore(final String finalClassName) {
+        // 是否包含忽略的 className 片段
+        boolean ignoreClassNameContains = IGNORE_CLASS_NAME_CONTAINS.stream().anyMatch(finalClassName::contains);
+        // 是否是以忽略的className 前缀开头
+        boolean ignoreClassNameStartsWith = IGNORE_CLASS_NAME_STARTS_WITH.stream().anyMatch(finalClassName::startsWith);
+        // 是否忽略的类
+        boolean ignoreClassName = IGNORE_CLASS_NAME.stream().anyMatch(finalClassName::equalsIgnoreCase);
+        return ignoreClassNameContains || ignoreClassNameStartsWith || ignoreClassName;
+    }
  
 }
