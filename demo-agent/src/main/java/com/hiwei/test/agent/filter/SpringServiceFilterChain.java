@@ -17,6 +17,10 @@ import java.util.stream.Stream;
 
 public class SpringServiceFilterChain extends AbstractFilterChain {
 
+    /**
+     * 实例
+     */
+    public static final SpringServiceFilterChain INSTANCE = new SpringServiceFilterChain();
     private static final Set<String> SERVICE_ANNOTATION = new HashSet<String>(){{
         add("org.springframework.stereotype.Service");
         add("org.springframework.stereotype.Component");
@@ -62,8 +66,8 @@ public class SpringServiceFilterChain extends AbstractFilterChain {
             context.type = "SERVICE";
             context.className = className;
             context.methodName = methodName;
-            context.context.put("CallType", "org.example.call.pojo.CallService");
-            context.context.put("instance", "org.example.filter.support.SpringServiceFilterChain.INSTANCE");
+            context.context.put("CallType", "com.hiwei.test.agent.call.CallService");
+            context.context.put("instance", "com.hiwei.test.agent.filter.SpringServiceFilterChain.INSTANCE");
             context.context.put("names", renderParamNames(method));
 
 

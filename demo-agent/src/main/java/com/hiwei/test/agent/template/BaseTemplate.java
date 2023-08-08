@@ -15,7 +15,7 @@ public class BaseTemplate {
     /**
      * {
      *     Object result = null;
-     *     org.example.call.pojo.BaseCall context = new org.example.call.pojo.BaseCall();
+     *     com.hiwei.test.agent.call.BaseCall context = new com.hiwei.test.agent.call.BaseCall();
      *     context.type = "Controller";
      *     context.startTime = 111110;
      *     context.className = "org.example.controller.DemoController";
@@ -31,7 +31,7 @@ public class BaseTemplate {
  
         sb.append("{").append('\n');
         sb.append("    Object result = null;").append('\n');
-        sb.append("    org.example.call.pojo.BaseCall context = new ").append(callType).append("();\n");        
+        sb.append("    com.hiwei.test.agent.call.BaseCall context = new ").append(callType).append("();\n");        
         sb.append("    context.type = \"").append(context.type).append("\";\n");
         sb.append("    context.startTime =  System.currentTimeMillis();\n");
         sb.append("    context.className = \"").append(context.className).append("\";\n");
@@ -59,7 +59,7 @@ public class BaseTemplate {
         sb.append("        ").append(instance).append(".before(context);\n");
         sb.append("        result = ").append(context.methodName).append("$agent($$);\n");
         sb.append("        context.context.put(\"result\", result);\n");
-        sb.append("        context.result = com.codetool.common.JsonHelper.stringify(result);\n");
+        sb.append("        context.result = com.alibaba.fastjson.JSON.toJSONString(result);\n");
         sb.append("        ").append(instance).append(".after(context);\n");
     }
  

@@ -20,6 +20,11 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 public class SpringControllerFilterChain extends AbstractFilterChain {
+
+    /**
+     * 实例
+     */
+    public static final SpringControllerFilterChain INSTANCE = new SpringControllerFilterChain();
     
     // 如果类上包含这两个注解中的任意一个则进行插桩
     private static final Set<String> CONTROLLER_ANNOTATIONS = new HashSet<String>() {{
@@ -94,8 +99,8 @@ public class SpringControllerFilterChain extends AbstractFilterChain {
             context.type = "CONTROLLER";
             context.className = className;
             context.methodName = methodName;
-            context.context.put("CallType", "org.example.call.pojo.CallWeb");
-            context.context.put("instance", "org.example.filter.support.SpringControllerFilterChain.INSTANCE");
+            context.context.put("CallType", "com.hiwei.test.agent.call.CallWeb");
+            context.context.put("instance", "com.hiwei.test.agent.filter.SpringControllerFilterChain.INSTANCE");
             context.context.put("names", renderParamNames(method));
  
             ctClass.addMethod(CtNewMethod.copy(method, methodName + "$agent", ctClass, null));

@@ -5,7 +5,6 @@ import com.hiwei.test.agent.call.CallContext;
 import com.hiwei.test.agent.call.BaseCall;
 import com.hiwei.test.agent.call.CallServlet;
 import com.hiwei.test.agent.call.CallSpan;
-import com.hiwei.test.agent.helper.MethodHelper;
 import com.hiwei.test.agent.template.BaseTemplate;
 import com.hiwei.test.agent.template.TemplateFactory;
 import javassist.CtClass;
@@ -29,6 +28,11 @@ import java.util.Map;
 public class HttpServletFilterChain extends AbstractFilterChain {
 
     private static final Logger LOGGER = LogManager.getLogger(HttpServletFilterChain.class);
+
+    /**
+     * 暴露实例出去
+     */
+    public static final HttpServletFilterChain INSTANCE = new HttpServletFilterChain();
 
     /**
      * web 入口
@@ -124,9 +128,9 @@ public class HttpServletFilterChain extends AbstractFilterChain {
         CallServlet context = new CallServlet();
         context.type = "SERVLET";
         context.className = servletClassName;
-        context.context.put("CallType", "org.example.call.pojo.CallServlet");
+        context.context.put("CallType", "com.hiwei.test.agent.call.CallServlet");
         context.methodName = methodName;
-        context.context.put("instance", "org.example.filter.support.HttpServletFilterChain.INSTANCE");
+        context.context.put("instance", "com.hiwei.test.agent.filter.HttpServletFilterChain.INSTANCE");
         context.context.put("names", "new String[] {\"req\", \"resp\"}");
         CtMethod service$agent = CtNewMethod.copy(service, context.methodName + "$agent", ctClass, null);
         ctClass.addMethod(service$agent);

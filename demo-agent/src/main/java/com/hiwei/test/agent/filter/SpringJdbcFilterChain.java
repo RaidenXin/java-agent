@@ -32,7 +32,7 @@ public class SpringJdbcFilterChain implements FilterChain {
  
         String sb = "{\n" +
                 "    java.sql.Connection conn = connect$agent($$);\n"  +
-                "    return org.example.filter.support.SpringJdbcFilterChain.proxyConnection(conn);\n" +
+                "    return com.hiwei.test.agent.filter.SpringJdbcFilterChain.proxyConnection(conn);\n" +
                 "}\n";
         connect.setBody(sb);
         return ctClass.toBytecode();
