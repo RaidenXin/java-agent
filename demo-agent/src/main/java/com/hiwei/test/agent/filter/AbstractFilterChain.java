@@ -95,6 +95,9 @@ public abstract class AbstractFilterChain implements FilterChain {
         if (java.lang.reflect.Modifier.isStatic(modifiers)) {
             return false;
         }
+        if (Object.class.getName().equals(m.getDeclaringClass().getName())) {
+            return false;
+        }
         return !java.lang.reflect.Modifier.isNative(modifiers);
     }
  

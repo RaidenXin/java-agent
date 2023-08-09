@@ -16,4 +16,9 @@ public interface Constant {
     int ZERO = 0;
 
     int ONE = 1;
+
+    /**
+     * 返回类型名称
+     */
+    String RETURN_TYPE_NAME = "returnTypeName";
 }

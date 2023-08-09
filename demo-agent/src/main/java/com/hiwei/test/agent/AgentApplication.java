@@ -74,6 +74,9 @@ public class AgentApplication implements ClassFileTransformer {
                 pool.insertClassPath(new LoaderClassPath(ClassLoader.getSystemClassLoader()));
             }
             CtClass sourceClass = pool.getCtClass(finalClassName);
+            if (sourceClass.isAnnotation()) {
+                return classfileBuffer;
+            }
             for (FilterChain chain : chains) {
                 if (chain.isTargetClass(finalClassName, sourceClass)) {
                     LOGGER.info("尝试对类: " + className + " 进行增强");
@@ -85,7 +88,7 @@ public class AgentApplication implements ClassFileTransformer {
                 }
             }
         } catch (NotFoundException e) {
-            LOGGER.error("未找到 className:" + finalClassName);
+            LOGGER.debug("未找到 className:" + finalClassName);
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         }

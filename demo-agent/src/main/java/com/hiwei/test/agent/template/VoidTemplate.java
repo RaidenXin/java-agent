@@ -4,6 +4,7 @@ public class VoidTemplate extends BaseTemplate {
  
     @Override
     protected void renderCenter(StringBuilder sb) {
+        sb.append("    try {\n");
         String instance = context.context.get("instance").toString();
         sb.append("        ").append(instance).append(".before(context);\n");
         sb.append("        ").append(context.methodName).append("$agent($$);\n");

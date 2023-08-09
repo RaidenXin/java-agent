@@ -19,6 +19,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import static com.hiwei.test.agent.common.Constant.RETURN_TYPE_NAME;
+
 public class SpringControllerFilterChain extends AbstractFilterChain {
 
     /**
@@ -102,6 +104,7 @@ public class SpringControllerFilterChain extends AbstractFilterChain {
             context.context.put("CallType", "com.hiwei.test.agent.call.CallWeb");
             context.context.put("instance", "com.hiwei.test.agent.filter.SpringControllerFilterChain.INSTANCE");
             context.context.put("names", renderParamNames(method));
+            context.context.put(RETURN_TYPE_NAME, method.getReturnType().getName());
  
             ctClass.addMethod(CtNewMethod.copy(method, methodName + "$agent", ctClass, null));
             BaseTemplate baseTemplate = TemplateFactory.getTemplate(method.getReturnType() != CtClass.voidType);

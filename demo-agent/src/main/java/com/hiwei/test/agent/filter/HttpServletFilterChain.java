@@ -19,7 +19,9 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
- 
+
+import static com.hiwei.test.agent.common.Constant.RETURN_TYPE_NAME;
+
 /**
  * 针对 HttpServlet 的请求拦截
  *
@@ -132,6 +134,7 @@ public class HttpServletFilterChain extends AbstractFilterChain {
         context.methodName = methodName;
         context.context.put("instance", "com.hiwei.test.agent.filter.HttpServletFilterChain.INSTANCE");
         context.context.put("names", "new String[] {\"req\", \"resp\"}");
+        context.context.put(RETURN_TYPE_NAME, service.getReturnType().getName());
         CtMethod service$agent = CtNewMethod.copy(service, context.methodName + "$agent", ctClass, null);
         ctClass.addMethod(service$agent);
  
