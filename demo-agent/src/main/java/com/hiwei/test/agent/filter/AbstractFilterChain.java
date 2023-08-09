@@ -5,7 +5,9 @@ import com.hiwei.test.agent.call.BaseCall;
 import com.hiwei.test.agent.common.Constant;
 import com.hiwei.test.agent.helper.MethodHelper;
 import javassist.CtMethod;
- 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import java.io.File;
 import java.util.List;
 
@@ -15,7 +17,8 @@ import java.util.List;
  * @author tameti
  */
 public abstract class AbstractFilterChain implements FilterChain {
- 
+
+    private static final Logger LOGGER = LogManager.getLogger(AbstractFilterChain.class);
     /**
      * 增强的方法执行之前执行这个方法, 它会接收一个空的 Map 用来记录方法的运行信息.
      * 然后接收原来的方法里面的所有参数, 并且封装为一个 Object[] 数组.最终返回一个对象
@@ -60,6 +63,7 @@ public abstract class AbstractFilterChain implements FilterChain {
      */
     public void finale(BaseCall context) {
         CallContext.exitSpan();
+        LOGGER.info(context.getData());
     }
  
     /**

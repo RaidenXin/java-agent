@@ -29,6 +29,8 @@ public class AgentApplication implements ClassFileTransformer {
         add("org.slf4j.");
         add("org.groovy.");
         add("sun.reflect");
+        add("org.springframework.cloud");
+        add("com.alibaba.cloud");
     }};
 
     private static final List<String> IGNORE_CLASS_NAME_CONTAINS = new ArrayList<String>() {{
@@ -79,7 +81,7 @@ public class AgentApplication implements ClassFileTransformer {
             }
             for (FilterChain chain : chains) {
                 if (chain.isTargetClass(finalClassName, sourceClass)) {
-                    LOGGER.info("尝试对类: " + className + " 进行增强");
+                    LOGGER.info("对类: " + className + " 进行增强");
                     try {
                         return chain.processingAgentClass(loader, sourceClass, finalClassName);
                     } catch (Exception e) {
@@ -87,10 +89,8 @@ public class AgentApplication implements ClassFileTransformer {
                     }
                 }
             }
-        } catch (NotFoundException e) {
-            LOGGER.debug("未找到 className:" + finalClassName);
         } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
+            LOGGER.debug("未找到 className:" + finalClassName);
         }
         return classfileBuffer;
     }

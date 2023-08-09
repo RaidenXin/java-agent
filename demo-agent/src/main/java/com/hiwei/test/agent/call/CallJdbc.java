@@ -27,8 +27,28 @@ public class CallJdbc extends BaseCall {
  
     @Override
     public String getData() {
-        return "INSERT INTO `call_jdbc`(`id`, `trace`, `span`, `prepare_sql`, `statement_type`, `database_type`, `sql_type`, `result`, `jdbc_url`, `username`, `finally_sql`, `parameters`, `thread`, `start_time`, `end_time`, `use_time`, `error`) " +
-                "VALUES(" + id + ", \"" + trace + "\", \"" + span + "\", \"" + prepareSql + "\", \"" + statementType + "\", \"" + databaseType + "\", \"" + sqlType + "\", \"" + result + "\", \"" + jdbcUrl + "\", \"" + username + "\", \"" + finallySql + "\", \"" +
-                parameters + "\", \"" + thread + "\", " + startTime + ", " + endTime + ", " + useTime + ", \"" + error + "\");\n";
+        return "{" +
+                "prepareSql='" + prepareSql + '\'' +
+                ", statementType='" + statementType + '\'' +
+                ", databaseType='" + databaseType + '\'' +
+                ", sqlType='" + sqlType + '\'' +
+                ", jdbcUrl='" + jdbcUrl + '\'' +
+                ", username='" + username + '\'' +
+                ", finallySql='" + finallySql + '\'' +
+                ", parameters='" + parameters + '\'' +
+                ", id=" + id +
+                ", type='" + type + '\'' +
+                ", trace='" + trace + '\'' +
+                ", span='" + span + '\'' +
+                ", error='" + error + '\'' +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", useTime=" + useTime +
+                ", thread='" + thread + '\'' +
+                ", result='" + result + '\'' +
+                ", className='" + className + '\'' +
+                ", methodName='" + methodName + '\'' +
+                ", context=" + context +
+                '}';
     }
 }
