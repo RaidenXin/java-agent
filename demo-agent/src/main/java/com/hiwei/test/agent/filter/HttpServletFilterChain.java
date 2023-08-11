@@ -112,7 +112,6 @@ public class HttpServletFilterChain extends AbstractFilterChain {
         Object[] paramValues = (Object[]) context.context.get("values");
         HttpServletResponse response = (HttpServletResponse) paramValues[1];
         servlet.status = response.getStatus();
- 
         super.finale(servlet);
     }
  
@@ -141,7 +140,6 @@ public class HttpServletFilterChain extends AbstractFilterChain {
         BaseTemplate template = TemplateFactory.getTemplate(service.getReturnType() != CtClass.voidType);
         template.context = context;
         String templateValue = template.render();
-        LOGGER.info(templateValue);
         service.setBody(templateValue);
         return ctClass.toBytecode();
     }

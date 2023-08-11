@@ -80,7 +80,6 @@ public class SpringServiceFilterChain extends AbstractFilterChain {
             BaseTemplate baseTemplate = TemplateFactory.getTemplate(method.getReturnType() != CtClass.voidType);
             baseTemplate.context = context;
             final String templateValue = baseTemplate.render();
-            LOGGER.info(templateValue);
             method.setBody(templateValue);
         }
         return ctClass.toBytecode();

@@ -90,7 +90,6 @@ public class AgentApplication implements ClassFileTransformer {
                 }
             }
         } catch (Exception e) {
-            LOGGER.debug("未找到 className:" + finalClassName);
         }
         return classfileBuffer;
     }
