@@ -91,7 +91,7 @@ public class CallSpan implements Cloneable {
                 sb.append(Constant.POINT).append(currentSpan.value);
                 currentSpan = currentSpan.parentSpan;
             }
-            return sb.toString();
+            return sb.reverse().toString();
         }
     }
 }

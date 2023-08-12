@@ -71,7 +71,7 @@ public class StatementWrapper {
         context.useTime = context.endTime - context.startTime;
  
         resultSet.last();
-        context.result = resultSet.getRow() + "";
+        context.result = String.valueOf(resultSet.getRow());
         resultSet.first();
     }
  
@@ -89,7 +89,7 @@ public class StatementWrapper {
     void executeEnd(boolean status) {
         context.endTime = System.currentTimeMillis();
         context.useTime = context.endTime - context.startTime;
-        context.result = status + "";
+        context.result = String.valueOf(status);
     }
  
  
@@ -106,7 +106,7 @@ public class StatementWrapper {
     void executeUpdateEnd(int row) {
         context.endTime = System.currentTimeMillis();
         context.useTime = context.endTime - context.startTime;
-        context.result = row + "";
+        context.result = String.valueOf(row);
     }
  
  
