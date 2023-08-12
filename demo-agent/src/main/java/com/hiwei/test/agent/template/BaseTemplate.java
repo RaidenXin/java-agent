@@ -56,15 +56,15 @@ public class BaseTemplate {
      */
     protected void renderCenter(StringBuilder sb) {
         String returnTypeName = (String) context.context.get(RETURN_TYPE_NAME);
-        sb.append("    java.lang.Object result$1 = null;").append('\n');
-        sb.append("    ").append(returnTypeName).append(" result$2 = ").append(initReturnValue(returnTypeName)).append(";").append('\n');
+        sb.append("    java.lang.Object result1 = null;").append('\n');
+        sb.append("    ").append(returnTypeName).append(" result2 = ").append(initReturnValue(returnTypeName)).append(";").append('\n');
         sb.append("    try {\n");
         String instance = context.context.get("instance").toString();
         sb.append("        ").append(instance).append(".before(context);\n");
-        sb.append("        result$2 = ").append(context.methodName).append("$agent($$);\n");
-        sb.append("        result$1 = result$2;\n");
-        sb.append("        context.context.put(\"result\", result$1);\n");
-        sb.append("        context.result = com.alibaba.fastjson.JSON.toJSONString(result$1);\n");
+        sb.append("        result2 = ").append(context.methodName).append("$agent($$);\n");
+        sb.append("        result1 = ").append(typeConversion(returnTypeName)).append(";\n");
+        sb.append("        context.context.put(\"result\", result1);\n");
+        sb.append("        context.result = com.alibaba.fastjson.JSON.toJSONString(result1);\n");
         sb.append("        ").append(instance).append(".after(context);\n");
     }
 
@@ -86,6 +86,26 @@ public class BaseTemplate {
             return "0L";
         }
         return "null";
+    }
+
+    /**
+     * 初始化返回值
+     * @param returnTypeName
+     * @return
+     */
+    private String typeConversion(String returnTypeName) {
+        if (boolean.class.getName().equals(returnTypeName)) {
+            return "String.valueOf(result2)";
+        } else if (int.class.getName().equals(returnTypeName)) {
+            return "String.valueOf(result2)";
+        } else if (float.class.getName().equals(returnTypeName)) {
+            return "String.valueOf(result2)";
+        } else if (double.class.getName().equals(returnTypeName)) {
+            return"String.valueOf(result2)";
+        } else if (long.class.getName().equals(returnTypeName)) {
+            return "String.valueOf(result2)";
+        }
+        return "result2";
     }
  
     /**
@@ -115,7 +135,7 @@ public class BaseTemplate {
     }
  
     protected void renderReturn(StringBuilder sb) {
-        sb.append("    return result$2;\n");
+        sb.append("    return result2;\n");
     }
  
  

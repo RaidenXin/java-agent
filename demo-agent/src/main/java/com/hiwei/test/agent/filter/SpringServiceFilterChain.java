@@ -6,6 +6,7 @@ import com.hiwei.test.agent.call.CallService;
 import com.hiwei.test.agent.call.CallSpan;
 import com.hiwei.test.agent.template.BaseTemplate;
 import com.hiwei.test.agent.template.TemplateFactory;
+import javassist.CannotCompileException;
 import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.CtNewMethod;
@@ -21,7 +22,7 @@ import static com.hiwei.test.agent.common.Constant.RETURN_TYPE_NAME;
 
 public class SpringServiceFilterChain extends AbstractFilterChain {
 
-    private static final Logger LOGGER = LogManager.getLogger(SpringServiceFilterChain.class);
+    private static final Logger LOGGER = LogManager.getLogger(AbstractFilterChain.class);
     /**
      * 实例
      */
@@ -80,7 +81,12 @@ public class SpringServiceFilterChain extends AbstractFilterChain {
             BaseTemplate baseTemplate = TemplateFactory.getTemplate(method.getReturnType() != CtClass.voidType);
             baseTemplate.context = context;
             final String templateValue = baseTemplate.render();
-            method.setBody(templateValue);
+            try {
+                method.setBody(templateValue);
+            } catch (CannotCompileException cce) {
+                LOGGER.error("templateValue:" +  templateValue);
+                LOGGER.error(cce);
+            }
         }
         return ctClass.toBytecode();
     }

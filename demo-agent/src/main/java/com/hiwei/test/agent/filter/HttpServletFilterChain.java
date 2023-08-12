@@ -10,8 +10,6 @@ import com.hiwei.test.agent.template.TemplateFactory;
 import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.CtNewMethod;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,8 +26,6 @@ import static com.hiwei.test.agent.common.Constant.RETURN_TYPE_NAME;
  * @author tameti
  */
 public class HttpServletFilterChain extends AbstractFilterChain {
-
-    private static final Logger LOGGER = LogManager.getLogger(HttpServletFilterChain.class);
 
     /**
      * 暴露实例出去

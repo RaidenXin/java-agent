@@ -20,7 +20,7 @@ public class CallSpan implements Cloneable {
     }
  
     public CallSpan(String span) {
-        if (Objects.isNull(span)) {
+        if (StringUtils.isBlank(span)) {
             currentSpan = new Span(Constant.ZERO, null);
         } else {
             String[] spans = StringUtils.split(span, Constant.POINT);

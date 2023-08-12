@@ -7,9 +7,8 @@ import javassist.CtNewMethod;
  
 public class SpringJdbcFilterChain implements FilterChain {
     private static final String[] driverClassNames = {
-            "com.mysql.jdbc.NonRegisteringDriver",
-            "oracle.jdbc.driver.OracleDriver",
-            "com.alibaba.druid.proxy.DruidDriver"
+            "com.mysql.cj.jdbc.NonRegisteringDriver",
+            "oracle.jdbc.driver.OracleDriver"
     };
  
     @Override
