@@ -6,7 +6,6 @@ import com.hiwei.test.agent.call.CallService;
 import com.hiwei.test.agent.call.CallSpan;
 import com.hiwei.test.agent.template.BaseTemplate;
 import com.hiwei.test.agent.template.TemplateFactory;
-import javassist.CannotCompileException;
 import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.CtNewMethod;
