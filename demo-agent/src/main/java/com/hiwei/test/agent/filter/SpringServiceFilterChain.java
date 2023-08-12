@@ -9,8 +9,6 @@ import com.hiwei.test.agent.template.TemplateFactory;
 import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.CtNewMethod;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 
 import java.lang.annotation.Annotation;
 import java.util.HashSet;
@@ -21,7 +19,6 @@ import static com.hiwei.test.agent.common.Constant.RETURN_TYPE_NAME;
 
 public class SpringServiceFilterChain extends AbstractFilterChain {
 
-    private static final Logger LOGGER = LogManager.getLogger(AbstractFilterChain.class);
     /**
      * 实例
      */

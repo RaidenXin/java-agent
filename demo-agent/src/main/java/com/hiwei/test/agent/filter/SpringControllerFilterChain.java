@@ -44,7 +44,7 @@ public class SpringControllerFilterChain extends AbstractFilterChain {
         add("org.springframework.web.bind.annotation.PatchMapping");
     }};
 
-    private static final Logger LOGGER = LogManager.getLogger(AgentApplication.class);
+    private static final Logger LOGGER = LogManager.getLogger(SpringControllerFilterChain.class);
 
  
     @Override

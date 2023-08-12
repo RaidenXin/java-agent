@@ -1,6 +1,13 @@
 package com.hiwei.test.agent.helper;
 
-public class SnowFlakeHelper {
+
+/**
+ * @Description: 雪花算法工具
+ * @Author 疆戟
+ * @Date 2023/8/5 15:12
+ * @Version 1.0
+ */
+public final class SnowFlakeHelper {
     private final long epoch; // 起始时间戳，可以根据需求设定
     private final long workerIdBits = 5L;
     private final long dataCenterIdBits = 5L;
@@ -23,7 +30,7 @@ public class SnowFlakeHelper {
         INSTANCE = new SnowFlakeHelper(1l, 1l, 1l);
     }
 
-    public SnowFlakeHelper(long workerId, long dataCenterId, long epoch) {
+    private SnowFlakeHelper(long workerId, long dataCenterId, long epoch) {
         if (workerId < 0 || workerId > maxWorkerId) {
             throw new IllegalArgumentException("Worker ID must be between 0 and " + maxWorkerId);
         }

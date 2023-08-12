@@ -45,6 +45,7 @@ public final class MethodHelper {
             int pos = Modifier.isStatic(ctMethod.getModifiers()) ? 0 : 1;
             List<String> parameterNames = new ArrayList<>();
             for (int i = 0; i < parametersCount; i++) {
+                // 获取参数名称
                 String paramName = attr.variableName(i + pos);
                 parameterNames.add(paramName);
             }
