@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.Objects;
 
+
 /**
  * 吸取了 TreeSpan 的精华, 去其糟粕. 底层是基于两个指针实现的, 1 个指针维护调用链的父节点, 另一个
  * 指针维护调用链的最大子节点. 并且重写了 clone() 方法, 从而在跨 Thread 的情况下实现值得深拷贝
@@ -34,6 +35,10 @@ public class CallSpan implements Cloneable {
     }
  
     public Span createEntrySpan() {
+        if (Objects.isNull(currentSpan)) {
+            currentSpan = new Span(Constant.ZERO, null);
+            return currentSpan;
+        }
         Span childSpan = currentSpan.childSpan;
         int value = Constant.ONE;
         // 如果当前节点下不存在子节点, 那么我们就直接创建一个 0 作为第一个子节点
@@ -86,7 +91,7 @@ public class CallSpan implements Cloneable {
                 sb.append(Constant.POINT).append(currentSpan.value);
                 currentSpan = currentSpan.parentSpan;
             }
-            return sb.length() > Constant.ZERO ? sb.substring(Constant.ZERO, sb.length() - Constant.ONE) : sb.toString();
+            return sb.toString();
         }
     }
 }

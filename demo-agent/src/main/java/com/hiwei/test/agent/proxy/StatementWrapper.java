@@ -40,6 +40,7 @@ public class StatementWrapper {
         if (parameters != null) {
             context.parameters = JSON.toJSONString(parameters);
         }
+        LOGGER.info(context.getData());
         CallContext.exitSpan();
     }
  
